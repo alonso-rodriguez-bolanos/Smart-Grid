@@ -1,0 +1,22 @@
+# Ejecutables y archivos compilados
+smartgrid
+smartgrid.exe
+*.o
+*.out
+build/
+
+# Carpetas de compilacion de los IDE
+.vs/
+x64/
+Debug/
+Release/
+cmake-build-*/
+out/
+bin/
+obj/
+
+# Archivos del sistema y de los editores
+.DS_Store
+.vscode/
+.idea/
+*.swp
