@@ -1,0 +1,5 @@
+{
+  "clientes": [
+    { "nombre": "Ana_Mora", "tokens": "ciento veinte", "subestaciones_conectadas": ["SanJose"], "beneficios": [] }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "regiones": [
+    {
+      "nombre": "Zona Norte",
+      "puntos_interconexion": [
+        {"nombre": "Planta Solar Alpha", "tipo": "generador"},
+        {"nombre": "Subestacion Central", "tipo": "subestacion"}
+      ]
+    }
+  ],
+  "lineas_transmision": [
+    {
+      "origen": {"region": "Zona Norte", "punto": "Planta Solar Alpha"},
+      "destino": {"region": "Zona Norte", "punto": "Subestacion Central"},
+      "medio": "alta_tension",
+      "distancia_km": 45,
+      "perdida_porcentaje": 2.5
+    }
+  ]
+}

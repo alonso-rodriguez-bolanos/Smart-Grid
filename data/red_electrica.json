@@ -1,4 +1,70 @@
 {
-  "regiones": [],
-  "lineas_transmision": []
+  "regiones": [
+    {
+      "nombre": "Norte",
+      "puntos_interconexion": [
+        { "nombre": "Arenal", "tipo": "generador" },
+        { "nombre": "Miravalles", "tipo": "generador" },
+        { "nombre": "Liberia", "tipo": "subestacion" },
+        { "nombre": "Canas", "tipo": "subestacion_local" }
+      ]
+    },
+    {
+      "nombre": "Centro",
+      "puntos_interconexion": [
+        { "nombre": "SanJose", "tipo": "subestacion" },
+        { "nombre": "Heredia", "tipo": "subestacion" },
+        { "nombre": "Alajuela", "tipo": "subestacion" },
+        { "nombre": "Escazu", "tipo": "subestacion_local" },
+        { "nombre": "Tibas", "tipo": "subestacion_local" }
+      ]
+    },
+    {
+      "nombre": "Este",
+      "puntos_interconexion": [
+        { "nombre": "Cachi", "tipo": "generador" },
+        { "nombre": "Reventazon", "tipo": "generador" },
+        { "nombre": "Cartago", "tipo": "subestacion" }
+      ]
+    },
+    {
+      "nombre": "Pacifico",
+      "puntos_interconexion": [
+        { "nombre": "Puntarenas", "tipo": "subestacion" },
+        { "nombre": "Jaco", "tipo": "subestacion_local" },
+        { "nombre": "Esparza", "tipo": "subestacion_local" }
+      ]
+    },
+    {
+      "nombre": "Sur",
+      "puntos_interconexion": [
+        { "nombre": "PerezZeledon", "tipo": "subestacion" },
+        { "nombre": "Golfito", "tipo": "subestacion_local" }
+      ]
+    }
+  ],
+  "lineas_transmision": [
+    { "origen": { "region": "Norte", "punto": "Arenal" }, "destino": { "region": "Norte", "punto": "Liberia" }, "medio": "alta_tension", "distancia_km": 60.0, "capacidad_max": 500.0, "perdida_porcentaje": 2.0, "usos": 3 },
+    { "origen": { "region": "Norte", "punto": "Arenal" }, "destino": { "region": "Norte", "punto": "Canas" }, "medio": "alta_tension", "distancia_km": 45.0, "capacidad_max": 450.0, "perdida_porcentaje": 1.5, "usos": 1 },
+    { "origen": { "region": "Norte", "punto": "Miravalles" }, "destino": { "region": "Norte", "punto": "Liberia" }, "medio": "alta_tension", "distancia_km": 30.0, "capacidad_max": 400.0, "perdida_porcentaje": 1.2, "usos": 2 },
+    { "origen": { "region": "Norte", "punto": "Miravalles" }, "destino": { "region": "Norte", "punto": "Canas" }, "medio": "subterraneo", "distancia_km": 25.0, "capacidad_max": 200.0, "perdida_porcentaje": 1.0, "usos": 0 },
+    { "origen": { "region": "Norte", "punto": "Liberia" }, "destino": { "region": "Norte", "punto": "Canas" }, "medio": "red_local", "distancia_km": 20.0, "capacidad_max": 120.0, "perdida_porcentaje": 0.8, "usos": 1 },
+    { "origen": { "region": "Norte", "punto": "Liberia" }, "destino": { "region": "Pacifico", "punto": "Puntarenas" }, "medio": "red_local", "distancia_km": 120.0, "capacidad_max": 100.0, "perdida_porcentaje": 9.0, "usos": 0 },
+    { "origen": { "region": "Norte", "punto": "Canas" }, "destino": { "region": "Centro", "punto": "Alajuela" }, "medio": "alta_tension", "distancia_km": 80.0, "capacidad_max": 500.0, "perdida_porcentaje": 2.5, "usos": 4 },
+    { "origen": { "region": "Pacifico", "punto": "Puntarenas" }, "destino": { "region": "Pacifico", "punto": "Esparza" }, "medio": "red_local", "distancia_km": 30.0, "capacidad_max": 80.0, "perdida_porcentaje": 3.4, "usos": 0 },
+    { "origen": { "region": "Pacifico", "punto": "Puntarenas" }, "destino": { "region": "Pacifico", "punto": "Jaco" }, "medio": "red_local", "distancia_km": 40.0, "capacidad_max": 90.0, "perdida_porcentaje": 2.0, "usos": 1 },
+    { "origen": { "region": "Este", "punto": "Cachi" }, "destino": { "region": "Centro", "punto": "SanJose" }, "medio": "alta_tension", "distancia_km": 30.0, "capacidad_max": 600.0, "perdida_porcentaje": 1.5, "usos": 6 },
+    { "origen": { "region": "Este", "punto": "Cachi" }, "destino": { "region": "Centro", "punto": "SanJose" }, "medio": "subterraneo", "distancia_km": 32.0, "capacidad_max": 300.0, "perdida_porcentaje": 0.9, "usos": 2 },
+    { "origen": { "region": "Este", "punto": "Cachi" }, "destino": { "region": "Este", "punto": "Cartago" }, "medio": "alta_tension", "distancia_km": 20.0, "capacidad_max": 500.0, "perdida_porcentaje": 1.0, "usos": 1 },
+    { "origen": { "region": "Centro", "punto": "Alajuela" }, "destino": { "region": "Centro", "punto": "Heredia" }, "medio": "subterraneo", "distancia_km": 15.0, "capacidad_max": 250.0, "perdida_porcentaje": 0.7, "usos": 2 },
+    { "origen": { "region": "Centro", "punto": "Alajuela" }, "destino": { "region": "Centro", "punto": "SanJose" }, "medio": "red_local", "distancia_km": 18.0, "capacidad_max": 150.0, "perdida_porcentaje": 0.5, "usos": 1 },
+    { "origen": { "region": "Centro", "punto": "Heredia" }, "destino": { "region": "Centro", "punto": "SanJose" }, "medio": "subterraneo", "distancia_km": 12.0, "capacidad_max": 250.0, "perdida_porcentaje": 0.6, "usos": 3 },
+    { "origen": { "region": "Centro", "punto": "Heredia" }, "destino": { "region": "Centro", "punto": "Tibas" }, "medio": "red_local", "distancia_km": 8.0, "capacidad_max": 100.0, "perdida_porcentaje": 0.4, "usos": 0 },
+    { "origen": { "region": "Centro", "punto": "SanJose" }, "destino": { "region": "Centro", "punto": "Escazu" }, "medio": "red_local", "distancia_km": 10.0, "capacidad_max": 120.0, "perdida_porcentaje": 0.5, "usos": 2 },
+    { "origen": { "region": "Centro", "punto": "SanJose" }, "destino": { "region": "Centro", "punto": "Tibas" }, "medio": "red_local", "distancia_km": 6.0, "capacidad_max": 100.0, "perdida_porcentaje": 0.3, "usos": 0 },
+    { "origen": { "region": "Este", "punto": "Reventazon" }, "destino": { "region": "Este", "punto": "Cartago" }, "medio": "alta_tension", "distancia_km": 35.0, "capacidad_max": 550.0, "perdida_porcentaje": 1.8, "usos": 5 },
+    { "origen": { "region": "Este", "punto": "Cartago" }, "destino": { "region": "Centro", "punto": "SanJose" }, "medio": "alta_tension", "distancia_km": 25.0, "capacidad_max": 500.0, "perdida_porcentaje": 1.2, "usos": 2 },
+    { "origen": { "region": "Este", "punto": "Cartago" }, "destino": { "region": "Sur", "punto": "PerezZeledon" }, "medio": "alta_tension", "distancia_km": 110.0, "capacidad_max": 400.0, "perdida_porcentaje": 4.5, "usos": 0 },
+    { "origen": { "region": "Sur", "punto": "PerezZeledon" }, "destino": { "region": "Sur", "punto": "Golfito" }, "medio": "red_local", "distancia_km": 90.0, "capacidad_max": 80.0, "perdida_porcentaje": 6.0, "usos": 0 }
+  ]
 }

@@ -1,0 +1,7 @@
+{
+  "clientes": [
+    { "nombre": "Ana_Mora", "tokens": 120, "subestaciones_conectadas": ["SanJose", "Monteverde", "Escazu"], "beneficios": ["Descuento_5"] },
+    { "nombre": "Ana_Mora", "tokens": 50, "subestaciones_conectadas": [], "beneficios": [] },
+    { "nombre": "Bruno_Solis", "tokens": -10, "subestaciones_conectadas": [], "beneficios": [] }
+  ]
+}

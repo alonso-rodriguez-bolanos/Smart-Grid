@@ -1,0 +1,24 @@
+{
+  "regiones": [
+    {
+      "nombre": "Norte",
+      "puntos_interconexion": [
+        { "nombre": "Arenal", "tipo": "generador" },
+        { "nombre": "Liberia", "tipo": "subestacion" },
+        { "nombre": "Liberia", "tipo": "subestacion" },
+        { "nombre": "Canas", "tipo": "planta_nuclear" },
+        { "nombre": "", "tipo": "subestacion_local" }
+      ]
+    }
+  ],
+  "lineas_transmision": [
+    { "origen": { "region": "Norte", "punto": "Arenal" }, "destino": { "region": "Norte", "punto": "Liberia" }, "medio": "alta_tension", "distancia_km": 60.0, "capacidad_max": 500.0, "perdida_porcentaje": 2.0, "usos": 0 },
+    { "origen": { "region": "Norte", "punto": "Arenal" }, "destino": { "region": "Norte", "punto": "Liberia" }, "medio": "alta_tension", "distancia_km": 61.0, "capacidad_max": 500.0, "perdida_porcentaje": 2.0, "usos": 0 },
+    { "origen": { "region": "Norte", "punto": "Arenal" }, "destino": { "region": "Norte", "punto": "Liberia" }, "medio": "red_local", "distancia_km": 60.0, "capacidad_max": 100.0, "perdida_porcentaje": 150.0, "usos": 0 },
+    { "origen": { "region": "Norte", "punto": "Arenal" }, "destino": { "region": "Norte", "punto": "Arenal" }, "medio": "red_local", "distancia_km": 5.0, "capacidad_max": 100.0, "perdida_porcentaje": 1.0, "usos": 0 },
+    { "origen": { "region": "Norte", "punto": "Arenal" }, "destino": { "region": "Norte", "punto": "Liberia" }, "medio": "satelite", "distancia_km": 5.0, "capacidad_max": 100.0, "perdida_porcentaje": 1.0, "usos": 0 },
+    { "origen": { "region": "Norte", "punto": "Liberia" }, "destino": { "region": "Norte", "punto": "Arenal" }, "medio": "subterraneo", "distancia_km": 0.0, "capacidad_max": 100.0, "perdida_porcentaje": 1.0, "usos": 0 },
+    { "origen": { "region": "Norte", "punto": "Liberia" }, "destino": { "region": "Norte", "punto": "Arenal" }, "medio": "subterraneo", "distancia_km": 10.0, "capacidad_max": -5.0, "perdida_porcentaje": 1.0, "usos": 0 },
+    { "origen": { "region": "Norte", "punto": "Liberia" }, "destino": { "region": "Norte", "punto": "Guanacaste" }, "medio": "subterraneo", "distancia_km": 10.0, "capacidad_max": 100.0, "perdida_porcentaje": 1.0, "usos": 0 }
+  ]
+}

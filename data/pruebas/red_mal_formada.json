@@ -1,0 +1,12 @@
+{
+  "regiones": [
+    {
+      "nombre": "Norte",
+      "puntos_interconexion": [
+        { "nombre": "Arenal", "tipo": "generador" }
+        { "nombre": "Liberia", "tipo": "subestacion" }
+      ]
+    }
+  ],
+  "lineas_transmision": []
+}
