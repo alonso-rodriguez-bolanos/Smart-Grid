@@ -12,7 +12,7 @@ private:
     double distancia;   // distancia_km
     double capacidad;   // capacidad_max
     double perdida;     // perdida_porcentaje
-    int usos;           // veces que se acepto en C3
+    int usos;           // veces que se acepto
     Arco* sigArco;      // siguiente linea del mismo vertice origen
 
 public:

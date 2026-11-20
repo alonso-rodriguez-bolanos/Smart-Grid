@@ -4,7 +4,7 @@ using namespace std;
 
 class Arco; // aviso de que Arco existe porque Vertice y Arco se apuntan entre si
 
-// Punto de interconexion de la red. La region es solo un texto (D1)
+// Punto de interconexion de la red. La region es solo un texto
 class Vertice {
 private:
     string nombre;

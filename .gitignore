@@ -20,3 +20,6 @@ obj/
 .vscode/
 .idea/
 *.swp
+
+*.o
+smartgrid
