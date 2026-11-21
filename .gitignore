@@ -23,3 +23,6 @@ obj/
 
 *.o
 smartgrid
+
+# Simbolos de depuracion que genera -g en macOS
+*.dSYM/

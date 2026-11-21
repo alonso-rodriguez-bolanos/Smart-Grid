@@ -16,13 +16,13 @@ ListaBeneficios::~ListaBeneficios() {
 }
 
 bool ListaBeneficios::insertarBeneficio(string nombre, int costo)  {  
-        if (nombre.empty()){
+    if (nombre.empty()){
         cout << "Nombre vacio" << endl;
         return false;
     }
 
-    if (costo > 0){
-        cout << nombre << " tiene costo negativo" << endl;
+    if (costo <= 0){ 
+        cout << nombre << " debe tener un costo mayor que 0" << endl;
         return false;
     }
 
@@ -73,8 +73,8 @@ bool ListaBeneficios::modificarBeneficio(string nombreActual, string nuevoNombre
         return false;
     }
 
-    if (nuevoCosto > 0) {
-        cout << nuevoNombre << " tiene costo negativo" << endl;
+    if (nuevoCosto <= 0) {
+        cout << nuevoNombre << " debe tener un costo mayor que 0" << endl;
         return false;
     }
 
