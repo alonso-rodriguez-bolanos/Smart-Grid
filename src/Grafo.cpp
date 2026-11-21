@@ -1,5 +1,6 @@
 #include "Grafo.h"
 #include <iostream>
+#include <queue>
 using namespace std;
 
 Grafo::Grafo() {
@@ -281,8 +282,79 @@ bool Grafo::eliminarArco(string origen, string destino, string medio) {
     return false;    // arco no encontrado
 }
 
-void Grafo::reiniciarVisitados() {}
-void Grafo::imprimirBFS(string inicio) {}
+void Grafo::reiniciarVisitados() {
+    Vertice* actual = primerVertice;
+    while (actual != nullptr) {
+        actual->setVisitado(false);
+        actual = actual->getSig();
+    }
+}
+
+void Grafo::imprimirConexiones(Vertice* v) {
+    cout << v->getNombre() << " (" << v->getTipo() << ", " << v->getRegion() << "):";
+
+    Arco* arcoActual = v->getPrimerArco();
+    bool primero = true;
+    while (arcoActual != nullptr) {
+        if (primero) {
+            cout << " "; // antes del primero solo un espacio
+            primero = false;
+        } else {
+            cout << ", "; // entre conexiones una coma
+        }
+        cout << arcoActual->getDestino()->getNombre() << " [" << arcoActual->getMedio() << ", " << arcoActual->getDistancia() << " km]";
+        arcoActual = arcoActual->getSig();
+    }
+    cout << endl;
+}
+
+void Grafo::imprimirBFS(string inicio) {
+    reiniciarVisitados(); // quedan todos empiezan sin visitar
+
+    Vertice* verticeInicio = buscarVertice(inicio);
+    if (verticeInicio == nullptr) { // el nombre no existe
+        cout << "Error: El vertice '" << inicio << "' no existe." << endl;
+        return;
+    }
+
+    queue<Vertice*> cola;
+    verticeInicio->setVisitado(true); // se marca al meterlo
+    cola.push(verticeInicio);
+
+    // Recorrido en amplitud
+    cout << "Recorrido en amplitud desde " << inicio << ":" << endl;
+    while (!cola.empty()) {
+        Vertice* actual = cola.front(); // primero se lee
+        cola.pop();                     // despues se saca
+        imprimirConexiones(actual);
+
+        Arco* arcoActual = actual->getPrimerArco();
+        while (arcoActual != nullptr) {
+            Vertice* destino = arcoActual->getDestino();
+            if (!destino->isVisitado()) {
+                destino->setVisitado(true); // se marca al descubrirlo
+                cola.push(destino);
+            }
+            arcoActual = arcoActual->getSig();
+        }
+    }
+
+    // No alcanzables al final
+    cout << "No alcanzables:" << endl;
+    int noAlcanzables = 0;
+    Vertice* actual = primerVertice;
+    while (actual != nullptr) {
+        if (!actual->isVisitado()) {
+            imprimirConexiones(actual);
+            noAlcanzables++;
+        }
+        actual = actual->getSig();
+    }
+    if (noAlcanzables == 0) {
+        cout << "Ninguno" << endl; // ninguno es no alcanzable
+    }
+}
+
 void Grafo::imprimirDFS(string inicio) {}
 void Grafo::imprimirTodasLasRutas(string origen, string destino, bool altaTension, bool subterraneo, bool redLocal) {}
 void Grafo::imprimirRutaMenorPerdida(string origen, string destino) {}

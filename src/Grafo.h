@@ -12,6 +12,7 @@ private:
 
     // Revisa distancia, capacidad y perdida
     bool valoresArcoValidos(double distancia, double capacidad, double perdida);
+    void imprimirConexiones(Vertice* v);
 
 public:
     Grafo();
