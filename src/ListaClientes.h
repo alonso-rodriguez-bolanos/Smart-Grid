@@ -8,6 +8,8 @@ class ListaClientes {
 private:
     Cliente* primero;
 
+    void imprimirTextos(NodoTexto* actual);
+
 public:
     ListaClientes();
     ~ListaClientes(); // libera todos los clientes

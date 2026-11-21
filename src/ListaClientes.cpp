@@ -138,6 +138,49 @@ void ListaClientes::renombrarSubestacionEnTodos(string viejo, string nuevo) {
     }
 }
 
-void ListaClientes::imprimirReporte() {}
+void ListaClientes::imprimirTextos(NodoTexto* actual) {
+    if (actual == nullptr) { // lista vacia
+        cout << "sin registros" << endl;
+        return;
+    }
+
+    bool esPrimero = true;
+    while (actual != nullptr) {
+        if (!esPrimero) {
+            cout << ", "; // coma antes de todos menos el primero
+        }
+        cout << actual->getNombre();
+        esPrimero = false;
+        actual = actual->getSig(); // avanza al siguiente nodo
+    }
+    cout << endl;
+}
+
+void ListaClientes::imprimirReporte() {
+    cout << "========== Reporte de clientes ==========" << endl;
+    int impresos = 0;
+    Cliente* actual = primero;
+
+    while (actual != nullptr) {
+        if (actual->getTokens() != 0 || actual->getPrimeraSubestacion() != nullptr || actual->getPrimerBeneficio() != nullptr) { // tiene historial
+            cout << actual->getNombre() << endl;
+            cout << "  Tokens: " << actual->getTokens() << endl;
+            cout << "  Subestaciones: ";
+            imprimirTextos(actual->getPrimeraSubestacion());
+            cout << "  Beneficios: ";
+            imprimirTextos(actual->getPrimerBeneficio());
+            cout << endl; // linea en blanco entre clientes
+            impresos++;
+        }
+        actual = actual->getSig();
+    }
+
+    if (impresos == 0) {
+        cout << "No hay clientes con historial" << endl;
+    } 
+    else {
+        cout << "Clientes con historial: " << impresos << endl;
+    }
+}
 
 bool ListaClientes::canjearBeneficio(string nombreCliente, ListaBeneficios& catalogo) {return false;}
