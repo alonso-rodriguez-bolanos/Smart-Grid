@@ -4,7 +4,7 @@
 #include "ListaBeneficios.h"
 #include "ArchivoJSON.h"
 
-// Menu con submenus por bloque (D18b). Es de Persona 1
+// Menu con submenus por bloque
 class Menu {
 private:
     Grafo& red;
@@ -12,7 +12,15 @@ private:
     ListaBeneficios& beneficios;
     ArchivoJSON& archivo;
 
-    int leerEntero(int minimo, int maximo); // lectura segura de numeros (D17)
+    // Lectura segura desde el teclado
+    int leerEntero(int minimo, int maximo);
+    double leerDecimal();
+    string leerTexto(string mensaje);
+
+    // Eligen por numero para evitar errores de escritura
+    string elegirTipo();
+    string elegirMedio();
+
     void menuCRUD();
     void menuReportes();
     void menuConsultas();

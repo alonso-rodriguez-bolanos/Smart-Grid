@@ -34,4 +34,6 @@ public:
 
     void imprimirReporte(); // omite clientes sin historial
     bool canjearBeneficio(string nombreCliente, ListaBeneficios& catalogo);
+
+        void imprimirCliente(Cliente* cliente);
 };

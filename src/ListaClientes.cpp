@@ -183,4 +183,13 @@ void ListaClientes::imprimirReporte() {
     }
 }
 
+void ListaClientes::imprimirCliente(Cliente* cliente) {
+    cout << cliente->getNombre() << endl;
+    cout << "  Tokens: " << cliente->getTokens() << endl;
+    cout << "  Subestaciones: ";
+    imprimirTextos(cliente->getPrimeraSubestacion());
+    cout << "  Beneficios: ";
+    imprimirTextos(cliente->getPrimerBeneficio());
+}
+
 bool ListaClientes::canjearBeneficio(string nombreCliente, ListaBeneficios& catalogo) {return false;}
