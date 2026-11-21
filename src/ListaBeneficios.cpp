@@ -110,5 +110,19 @@ bool ListaBeneficios::eliminarBeneficio(string nombre) {
     return true;
 }
 
-void ListaBeneficios::imprimirRecursivo() {}
-void ListaBeneficios::imprimirDesde(Beneficio* actual) {}
+void ListaBeneficios::imprimirRecursivo() {
+    if (primero == nullptr) {
+        cout << "No hay beneficios en el catalogo" << endl;
+        return;
+    }
+    cout << "===== Catalogo de beneficios =====" << endl;
+    imprimirDesde(primero); // arranca la recursion desde el primero
+}
+
+void ListaBeneficios::imprimirDesde(Beneficio* actual) {
+    if (actual == nullptr) { // se acabo la lista
+        return;
+    }
+    cout << "- " << actual->getNombre() << " | costo: " << actual->getCosto() << " tokens." << endl;
+    imprimirDesde(actual->getSig()); // recursividad
+}
