@@ -3,6 +3,7 @@
 Beneficio::Beneficio(string nombre, int costo) {
     this->nombre = nombre;
     this->costo = costo;
+    this->sig = nullptr;
 }
 
 string Beneficio::getNombre() {
