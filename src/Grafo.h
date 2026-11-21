@@ -12,7 +12,15 @@ private:
 
     // Revisa distancia, capacidad y perdida
     bool valoresArcoValidos(double distancia, double capacidad, double perdida);
+
+    // Imprime el vertice y sus conexiones en una linea
     void imprimirConexiones(Vertice* v);
+
+    // Imprime los vertices que quedaron sin visitar despues de un recorrido
+    void imprimirNoAlcanzables();
+
+    // Recursion del recorrido en profundidad
+    void dfsRecursivo(Vertice* actual);
 
 public:
     Grafo();

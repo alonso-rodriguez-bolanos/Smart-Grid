@@ -302,14 +302,15 @@ void Grafo::imprimirConexiones(Vertice* v) {
         } else {
             cout << ", "; // entre conexiones una coma
         }
-        cout << arcoActual->getDestino()->getNombre() << " [" << arcoActual->getMedio() << ", " << arcoActual->getDistancia() << " km]";
+        cout << arcoActual->getDestino()->getNombre()
+             << " [" << arcoActual->getMedio() << ", " << arcoActual->getDistancia() << " km]"; // el medio distingue arcos repetidos
         arcoActual = arcoActual->getSig();
     }
     cout << endl;
 }
 
 void Grafo::imprimirBFS(string inicio) {
-    reiniciarVisitados(); // quedan todos empiezan sin visitar
+    reiniciarVisitados(); // todos empiezan sin visitar
 
     Vertice* verticeInicio = buscarVertice(inicio);
     if (verticeInicio == nullptr) { // el nombre no existe
@@ -321,7 +322,7 @@ void Grafo::imprimirBFS(string inicio) {
     verticeInicio->setVisitado(true); // se marca al meterlo
     cola.push(verticeInicio);
 
-    // Recorrido en amplitud
+    // Recorrido en amplitud desde el inicio
     cout << "Recorrido en amplitud desde " << inicio << ":" << endl;
     while (!cola.empty()) {
         Vertice* actual = cola.front(); // primero se lee
@@ -340,6 +341,10 @@ void Grafo::imprimirBFS(string inicio) {
     }
 
     // No alcanzables al final
+    imprimirNoAlcanzables();
+}
+
+void Grafo::imprimirNoAlcanzables() {
     cout << "No alcanzables:" << endl;
     int noAlcanzables = 0;
     Vertice* actual = primerVertice;
@@ -351,11 +356,45 @@ void Grafo::imprimirBFS(string inicio) {
         actual = actual->getSig();
     }
     if (noAlcanzables == 0) {
-        cout << "Ninguno" << endl; // ninguno es no alcanzable
+        cout << "Ninguno" << endl; // todos se alcanzaron
     }
 }
 
-void Grafo::imprimirDFS(string inicio) {}
+void Grafo::dfsRecursivo(Vertice* actual) {
+    actual->setVisitado(true); // se marca al entrar
+
+    Arco* arcoActual = actual->getPrimerArco();
+    while (arcoActual != nullptr) {
+        Vertice* destino = arcoActual->getDestino();
+        cout << actual->getNombre() << " -> " << destino->getNombre()
+             << " [" << arcoActual->getMedio() << ", " << arcoActual->getDistancia() << " km]" << endl;
+        if (!destino->isVisitado()) {
+            dfsRecursivo(destino); // baja por esa ruta
+        }
+        arcoActual = arcoActual->getSig();
+    }
+    // sin arcos pendientes la funcion termina y regresa sola
+}
+
+void Grafo::imprimirDFS(string inicio) {
+    reiniciarVisitados(); // todos empiezan sin visitar
+
+    Vertice* verticeInicio = buscarVertice(inicio);
+    if (verticeInicio == nullptr) { // el nombre no existe
+        cout << "Error: El vertice '" << inicio << "' no existe." << endl;
+        return;
+    }
+
+    // Recorrido en profundidad desde el inicio
+    cout << "Recorrido en profundidad desde " << inicio << ":" << endl;
+    if (verticeInicio->getPrimerArco() == nullptr) { // solo se revisa el inicio y no las hojas
+        cout << inicio << " no tiene lineas de salida" << endl;
+    }
+    dfsRecursivo(verticeInicio);
+
+    // No alcanzables al final
+    imprimirNoAlcanzables();
+}
 void Grafo::imprimirTodasLasRutas(string origen, string destino, bool altaTension, bool subterraneo, bool redLocal) {}
 void Grafo::imprimirRutaMenorPerdida(string origen, string destino) {}
 void Grafo::consultarRutaMayorTokens(string origen, string destino, Cliente* cliente, bool horaNoPico) {}
