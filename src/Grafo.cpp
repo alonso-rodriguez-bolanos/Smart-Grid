@@ -399,4 +399,32 @@ void Grafo::imprimirTodasLasRutas(string origen, string destino, bool altaTensio
 void Grafo::imprimirRutaMenorPerdida(string origen, string destino) {}
 void Grafo::consultarRutaMayorTokens(string origen, string destino, Cliente* cliente, bool horaNoPico) {}
 void Grafo::imprimirRutaFrecuenteYUnica() {}
-void Grafo::imprimirNodosInactivos(ListaClientes& clientes) {}
+
+void Grafo::imprimirNodosInactivos(ListaClientes& clientes) {
+    int inactivos = 0;
+    cout << "========== Nodos inactivos ==========" << endl;
+    Vertice* actual = primerVertice;
+    while (actual != nullptr) {
+        if (actual->getTipo() != "generador") {
+            bool activo = false;
+            Cliente* clienteActual = clientes.getPrimero();
+            while (clienteActual != nullptr && !activo) {
+                if (clienteActual->tieneSubestacion(actual->getNombre())) {
+                    activo = true; // se encontro al menos un cliente que lo uso
+                }
+                clienteActual = clienteActual->getSig();
+            }
+            if (!activo) {
+                cout << actual->getNombre() << " (" << actual->getTipo() << ")" << endl;
+                inactivos++;
+            }
+        }
+        actual = actual->getSig();
+    }
+    if (inactivos == 0) {
+        cout << "Ninguno" << endl;
+        return; // todos los nodos fueron usados por al menos un cliente
+    }
+    cout << "Total de nodos inactivos: " << inactivos << endl;
+    return;
+}
