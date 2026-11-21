@@ -2,7 +2,7 @@
 
 NodoTexto::NodoTexto(string nombre) {
     this->nombre = nombre;
-    this->sig = nullptr; // al crearse no apunta a nadie
+    this->sig = nullptr;
 }
 
 string NodoTexto::getNombre() {

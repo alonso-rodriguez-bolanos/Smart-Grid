@@ -1,13 +1,30 @@
 #include "Beneficio.h"
 
 Beneficio::Beneficio(string nombre, int costo) {
-    // pendiente Persona 1
+    this->nombre = nombre;
+    this->costo = costo;
 }
 
-string Beneficio::getNombre() { return ""; }
-int Beneficio::getCosto() { return 0; }
-Beneficio* Beneficio::getSig() { return nullptr; }
+string Beneficio::getNombre() {
+    return nombre;
+}
 
-void Beneficio::setNombre(string nombre) {}
-void Beneficio::setCosto(int costo) {}
-void Beneficio::setSig(Beneficio* sig) {}
+int Beneficio::getCosto() {
+    return costo;
+}
+
+Beneficio* Beneficio::getSig() {
+    return sig;
+}
+
+void Beneficio::setNombre(string nombre) {
+    this->nombre = nombre;
+}
+
+void Beneficio::setCosto(int costo) {
+    this->costo = costo;
+}
+
+void Beneficio::setSig(Beneficio* sig) {
+    this->sig = sig;
+}

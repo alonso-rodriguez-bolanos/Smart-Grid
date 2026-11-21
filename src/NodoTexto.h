@@ -2,7 +2,7 @@
 #include <string>
 using namespace std;
 
-// Nodo de las sublistas de un cliente: subestaciones y beneficios canjeados (D11c)
+// Nodo de las sublistas de un cliente: subestaciones y beneficios canjeados
 class NodoTexto {
 private:
     string nombre;
