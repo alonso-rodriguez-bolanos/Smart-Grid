@@ -1,11 +1,22 @@
 #include "NodoTexto.h"
 
 NodoTexto::NodoTexto(string nombre) {
-    // pendiente Persona 1
+    this->nombre = nombre;
+    this->sig = nullptr; // al crearse no apunta a nadie
 }
 
-string NodoTexto::getNombre() { return ""; }
-NodoTexto* NodoTexto::getSig() { return nullptr; }
+string NodoTexto::getNombre() {
+    return nombre;
+}
 
-void NodoTexto::setNombre(string nombre) {}
-void NodoTexto::setSig(NodoTexto* sig) {}
+NodoTexto* NodoTexto::getSig() {
+    return sig;
+}
+
+void NodoTexto::setNombre(string nombre) {
+    this->nombre = nombre;
+}
+
+void NodoTexto::setSig(NodoTexto* sig) {
+    this->sig = sig;
+}
