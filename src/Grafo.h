@@ -22,6 +22,15 @@ private:
     // Recursion del recorrido en profundidad
     void dfsRecursivo(Vertice* actual);
 
+    // Dice si un arco pasa el filtro de medios
+    bool medioPermitido(string medio, bool altaTension, bool subterraneo, bool redLocal);
+    // Cuantos vertices hay para saber el tamano del arreglo de la ruta
+    int contarVertices();
+    // Backtracking: avanza nodo por nodo y al llegar al destino imprime la ruta
+    void buscarRutas(Vertice* inicio, Vertice* actual, Vertice* destino, bool altaTension, bool subterraneo, bool redLocal, Arco** ruta, int largo, int& cantidad);
+    // Imprime una ruta ya encontrada
+    void imprimirRuta(Vertice* inicio, Arco** ruta, int largo, int numero);
+
 public:
     Grafo();
     ~Grafo(); // libera todos los vertices y arcos

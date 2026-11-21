@@ -1,10 +1,28 @@
 {
   "beneficios": [
-    { "nombre": "Descuento_5", "costo": 50 },
-    { "nombre": "Descuento_10", "costo": 100 },
-    { "nombre": "Bono_carga_vehiculo", "costo": 150 },
-    { "nombre": "Auditoria_energetica", "costo": 200 },
-    { "nombre": "Panel_solar_parcial", "costo": 400 },
-    { "nombre": "Mes_gratis", "costo": 600 }
+    {
+      "costo": 50,
+      "nombre": "Descuento_5"
+    },
+    {
+      "costo": 100,
+      "nombre": "Descuento_10"
+    },
+    {
+      "costo": 150,
+      "nombre": "Bono_carga_vehiculo"
+    },
+    {
+      "costo": 200,
+      "nombre": "Auditoria_energetica"
+    },
+    {
+      "costo": 400,
+      "nombre": "Panel_solar_parcial"
+    },
+    {
+      "costo": 600,
+      "nombre": "Mes_gratis"
+    }
   ]
 }

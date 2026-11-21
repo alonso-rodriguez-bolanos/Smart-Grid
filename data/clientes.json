@@ -1,14 +1,109 @@
 {
   "clientes": [
-    { "nombre": "Ana_Mora", "tokens": 120, "subestaciones_conectadas": ["SanJose", "Escazu"], "beneficios": ["Descuento_5"] },
-    { "nombre": "Bruno_Solis", "tokens": 0, "subestaciones_conectadas": [], "beneficios": [] },
-    { "nombre": "Carla_Jimenez", "tokens": 450, "subestaciones_conectadas": ["Heredia", "Tibas", "SanJose"], "beneficios": ["Descuento_10", "Auditoria_energetica"] },
-    { "nombre": "Diego_Vargas", "tokens": 35, "subestaciones_conectadas": ["Liberia"], "beneficios": [] },
-    { "nombre": "Elena_Rojas", "tokens": 260, "subestaciones_conectadas": ["Canas", "Alajuela"], "beneficios": ["Descuento_5"] },
-    { "nombre": "Fabian_Castro", "tokens": 0, "subestaciones_conectadas": ["Cartago"], "beneficios": ["Descuento_5"] },
-    { "nombre": "Gabriela_Pineda", "tokens": 700, "subestaciones_conectadas": ["Puntarenas", "Jaco"], "beneficios": ["Bono_carga_vehiculo"] },
-    { "nombre": "Hector_Ulate", "tokens": 90, "subestaciones_conectadas": ["Escazu"], "beneficios": [] },
-    { "nombre": "Irene_Campos", "tokens": 1000, "subestaciones_conectadas": ["Liberia", "Canas", "Alajuela", "Heredia"], "beneficios": ["Descuento_5", "Descuento_10", "Bono_carga_vehiculo", "Auditoria_energetica", "Panel_solar_parcial"] },
-    { "nombre": "Jorge_Arias", "tokens": 15, "subestaciones_conectadas": ["Tibas"], "beneficios": ["Plan_antiguo"] }
+    {
+      "beneficios": [
+        "Descuento_5"
+      ],
+      "nombre": "Ana_Mora",
+      "subestaciones_conectadas": [
+        "SanJose",
+        "Escazu"
+      ],
+      "tokens": 120
+    },
+    {
+      "beneficios": [],
+      "nombre": "Bruno_Solis",
+      "subestaciones_conectadas": [],
+      "tokens": 0
+    },
+    {
+      "beneficios": [
+        "Descuento_10",
+        "Auditoria_energetica"
+      ],
+      "nombre": "Carla_Jimenez",
+      "subestaciones_conectadas": [
+        "Heredia",
+        "Tibas",
+        "SanJose"
+      ],
+      "tokens": 450
+    },
+    {
+      "beneficios": [],
+      "nombre": "Diego_Vargas",
+      "subestaciones_conectadas": [
+        "Liberia"
+      ],
+      "tokens": 35
+    },
+    {
+      "beneficios": [
+        "Descuento_5"
+      ],
+      "nombre": "Elena_Rojas",
+      "subestaciones_conectadas": [
+        "Canas",
+        "Alajuela"
+      ],
+      "tokens": 260
+    },
+    {
+      "beneficios": [
+        "Descuento_5"
+      ],
+      "nombre": "Fabian_Castro",
+      "subestaciones_conectadas": [
+        "Cartago"
+      ],
+      "tokens": 0
+    },
+    {
+      "beneficios": [
+        "Bono_carga_vehiculo"
+      ],
+      "nombre": "Gabriela_Pineda",
+      "subestaciones_conectadas": [
+        "Puntarenas",
+        "Jaco"
+      ],
+      "tokens": 700
+    },
+    {
+      "beneficios": [],
+      "nombre": "Hector_Ulate",
+      "subestaciones_conectadas": [
+        "Escazu"
+      ],
+      "tokens": 90
+    },
+    {
+      "beneficios": [
+        "Descuento_5",
+        "Descuento_10",
+        "Bono_carga_vehiculo",
+        "Auditoria_energetica",
+        "Panel_solar_parcial"
+      ],
+      "nombre": "Irene_Campos",
+      "subestaciones_conectadas": [
+        "Liberia",
+        "Canas",
+        "Alajuela",
+        "Heredia"
+      ],
+      "tokens": 1000
+    },
+    {
+      "beneficios": [
+        "Plan_antiguo"
+      ],
+      "nombre": "Jorge_Arias",
+      "subestaciones_conectadas": [
+        "Tibas"
+      ],
+      "tokens": 15
+    }
   ]
 }

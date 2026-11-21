@@ -395,7 +395,96 @@ void Grafo::imprimirDFS(string inicio) {
     // No alcanzables al final
     imprimirNoAlcanzables();
 }
-void Grafo::imprimirTodasLasRutas(string origen, string destino, bool altaTension, bool subterraneo, bool redLocal) {}
+bool Grafo::medioPermitido(string medio, bool altaTension, bool subterraneo, bool redLocal) {
+    return ((medio == "alta_tension" && altaTension) || (medio == "subterraneo" && subterraneo) || (medio == "red_local" && redLocal));
+}
+
+int Grafo::contarVertices() {
+    int contador = 0;
+    Vertice* actual = primerVertice;
+    while (actual != nullptr) {
+        contador++;
+        actual = actual->getSig();
+    }
+    return contador;
+}
+
+void Grafo::buscarRutas(Vertice* inicio, Vertice* actual, Vertice* destino, bool altaTension, bool subterraneo, bool redLocal, Arco** ruta, int largo, int& cantidad) {
+    //  se llego al destino
+    if (actual == destino) {
+        cantidad++;
+        imprimirRuta(inicio, ruta, largo, cantidad);
+        return; // el destino no se marca para que otras rutas lleguen
+    }
+
+    // Se marca para no pasar dos veces por el mismo vertice
+    actual->setVisitado(true);
+
+    // Se prueba cada arco que pase el filtro
+    Arco* arcoActual = actual->getPrimerArco();
+    while (arcoActual != nullptr) {
+        Vertice* siguiente = arcoActual->getDestino();
+        if (medioPermitido(arcoActual->getMedio(), altaTension, subterraneo, redLocal) && !siguiente->isVisitado()) {
+            ruta[largo] = arcoActual; // se agrega el arco al camino
+            buscarRutas(inicio, siguiente, destino, altaTension, subterraneo, redLocal, ruta, largo + 1, cantidad);
+        }
+        arcoActual = arcoActual->getSig();
+    }
+
+    // Se desmarca para que otra ruta pueda pasar por aqui
+    actual->setVisitado(false);
+}
+
+void Grafo::imprimirRuta(Vertice* inicio, Arco** ruta, int largo, int numero) {
+    cout << "Ruta " << numero << ":" << endl;
+    double total = 0;
+    for (int i = 0; i < largo; i++) {
+        string origenArco;
+        if (i == 0) {
+            origenArco = inicio->getNombre(); // el primer arco sale del inicio
+        } 
+        else {
+            origenArco = ruta[i - 1]->getDestino()->getNombre(); // sale de donde llego el anterior
+        }
+        cout << "  " << origenArco << " -> " << ruta[i]->getDestino()->getNombre()
+             << " [" << ruta[i]->getMedio() << ", " << ruta[i]->getDistancia() << " km]" << endl;
+        total += ruta[i]->getDistancia();
+    }
+    cout << "  Distancia total: " << total << " km" << endl;
+}
+
+void Grafo::imprimirTodasLasRutas(string origen, string destino, bool altaTension, bool subterraneo, bool redLocal) {
+    Vertice* verticeOrigen = buscarVertice(origen);
+    Vertice* verticeDestino = buscarVertice(destino);
+    if (verticeOrigen == nullptr) {
+        cout << "Error: El vertice '" << origen << "' no existe." << endl;
+        return;
+    }
+    if (verticeDestino == nullptr) {
+        cout << "Error: El vertice '" << destino << "' no existe." << endl;
+        return;
+    }
+    if (verticeOrigen == verticeDestino) {
+        cout << "Error: El origen y el destino son el mismo vertice." << endl;
+        return;
+    }
+
+    reiniciarVisitados();
+    Arco** ruta = new Arco*[contarVertices()]; // un camino simple tiene menos arcos que vertices
+    int cantidad = 0;
+
+    cout << "Rutas de " << origen << " a " << destino << ":" << endl;
+    buscarRutas(verticeOrigen, verticeOrigen, verticeDestino, altaTension, subterraneo, redLocal,
+                ruta, 0, cantidad);
+    delete[] ruta;
+
+    if (cantidad == 0) {
+        cout << "No hay rutas de " << origen << " a " << destino << " con los medios elegidos" << endl;
+    } else {
+        cout << "Total: " << cantidad << (cantidad == 1 ? " ruta" : " rutas") << endl;
+    }
+}
+
 void Grafo::imprimirRutaMenorPerdida(string origen, string destino) {}
 void Grafo::consultarRutaMayorTokens(string origen, string destino, Cliente* cliente, bool horaNoPico) {}
 void Grafo::imprimirRutaFrecuenteYUnica() {}
