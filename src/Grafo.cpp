@@ -570,6 +570,44 @@ void Grafo::imprimirRutaMenorPerdida(string origen, string destino) {
         }
     }
 
+    int posicionDestino = posicionDe(vertices, n, verticeDestino);
+    if (valor[posicionDestino] == numeric_limits<double>::infinity()) {
+        cout << "No hay ruta de " << origen << " a " << destino << endl;
+    }
+    else {
+        // Contar los arcos de la ruta
+        int largo = 0;
+        int p = posicionDestino;
+        while (anterior[p] != -1) {
+            largo++;
+            p = anterior[p];
+        }
+
+        // Llenar ruta de atras hacia adelante
+        Arco** ruta = new Arco*[largo];
+        p = posicionDestino;
+        for (int k = largo - 1; k >= 0; k--) {
+            ruta[k] = vieneDe[p];  // el arco con que se llego a p
+            p = anterior[p];       // se retrocede un vertice
+        }
+
+        // Imprimir de inicio a fin
+        cout << "Ruta de menor perdida de " << origen << " a " << destino << ":" << endl;
+        for (int k = 0; k < largo; k++) {
+            string nombreOrigen;
+            if (k == 0) {
+                nombreOrigen = verticeOrigen->getNombre();              // el primer arco sale del origen
+            } else {
+                nombreOrigen = ruta[k - 1]->getDestino()->getNombre();  // sale de donde llego el anterior
+            }
+            cout << "  " << nombreOrigen << " -> " << ruta[k]->getDestino()->getNombre()
+                 << " [" << ruta[k]->getMedio() << ", " << ruta[k]->getPerdida() << " %]" << endl;
+        }
+        cout << "  Perdida total: " << valor[posicionDestino] << " %" << endl;
+
+        delete[] ruta;
+    }
+
     delete[] vertices;
     delete[] valor;
     delete[] vieneDe;
