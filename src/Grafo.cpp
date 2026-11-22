@@ -748,7 +748,66 @@ void Grafo::consultarRutaMayorTokens(string origen, string destino, Cliente* cli
     delete[] mejorRuta;
 }
 
-void Grafo::imprimirRutaFrecuenteYUnica() {}
+void Grafo::imprimirRutaFrecuenteYUnica() {
+    int maximo = 0;
+    Vertice* vertice = primerVertice;
+
+    while(vertice != nullptr){
+        Arco* arco = vertice->getPrimerArco();
+
+        while (arco != nullptr){
+            if (arco->getUsos() > maximo){
+                maximo = arco->getUsos();
+            }
+            arco = arco->getSig();
+        }
+        vertice = vertice->getSig();
+    }
+
+    cout << endl << "Ruta mas frecuente:" << endl;
+
+    if (maximo == 0){
+        cout << "Ninguna linea se ha usado."<< endl;
+    }
+
+    else{
+        vertice = primerVertice;
+
+        while(vertice != nullptr){
+            Arco* arco = vertice->getPrimerArco();
+
+            while (arco != nullptr){
+                if (arco->getUsos() == maximo){
+                    cout << vertice->getNombre() << " -> " << arco->getDestino()->getNombre() << " [" << arco->getMedio() << "]: " << maximo << " usos"<< endl;
+                }
+                arco = arco->getSig();
+            }
+            vertice = vertice->getSig();
+        }
+    }
+
+    cout << endl << "Rutas usadas solamente una vez:" << endl;
+
+    int cantidad = 0;
+    vertice = primerVertice;
+
+    while(vertice != nullptr){
+        Arco* arco = vertice->getPrimerArco();
+
+        while (arco != nullptr){
+            if (arco->getUsos() == 1){
+                cout << vertice->getNombre() << " -> " << arco->getDestino()->getNombre() << " [" << arco->getMedio() << "]: 1 uso"<< endl;
+                cantidad++;
+            }
+            arco = arco->getSig();
+        }
+        vertice = vertice->getSig();
+    }
+
+    if (cantidad == 0){
+        cout << "Ninguna." << endl;
+    }
+}
 
 void Grafo::imprimirNodosInactivos(ListaClientes& clientes) {
     int inactivos = 0;
