@@ -30,6 +30,8 @@ private:
     void buscarRutas(Vertice* inicio, Vertice* actual, Vertice* destino, bool altaTension, bool subterraneo, bool redLocal, Arco** ruta, int largo, int& cantidad);
     // Imprime una ruta ya encontrada
     void imprimirRuta(Vertice* inicio, Arco** ruta, int largo, int numero);
+    // ayuda en el algoritmo de Dijkstra para encontrar la posicion de un vertice en el arreglo
+    int posicionDe(Vertice** vertices, int n, Vertice* buscado);
 
 public:
     Grafo();

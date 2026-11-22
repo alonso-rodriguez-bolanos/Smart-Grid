@@ -1,6 +1,7 @@
 #include "Grafo.h"
 #include <iostream>
 #include <queue>
+#include <limits>
 using namespace std;
 
 Grafo::Grafo() {
@@ -485,7 +486,96 @@ void Grafo::imprimirTodasLasRutas(string origen, string destino, bool altaTensio
     }
 }
 
-void Grafo::imprimirRutaMenorPerdida(string origen, string destino) {}
+int Grafo::posicionDe(Vertice** vertices, int n, Vertice* buscado) {
+    for (int i = 0; i < n; i++) {
+        if (vertices[i] == buscado) {
+            return i;
+        }
+    }
+    return -1; // no encontrado
+}
+
+void Grafo::imprimirRutaMenorPerdida(string origen, string destino) {
+    Vertice* verticeOrigen = buscarVertice(origen);
+    Vertice* verticeDestino = buscarVertice(destino);
+    if (verticeOrigen == nullptr) {
+        cout << "Error: El vertice '" << origen << "' no existe." << endl;
+        return;
+    }
+    if (verticeDestino == nullptr) {
+        cout << "Error: El vertice '" << destino << "' no existe." << endl;
+        return;
+    }
+    if (verticeOrigen == verticeDestino) {
+        cout << "Error: El origen y el destino son el mismo vertice." << endl;
+        return;
+    }
+
+    reiniciarVisitados();
+    int n = contarVertices();
+    Vertice** vertices = new Vertice*[n];
+    double* valor = new double[n];
+    Arco** vieneDe = new Arco*[n];
+    int* anterior = new int[n];
+
+    int i = 0;
+    Vertice* actual = primerVertice;
+
+    while (actual != nullptr) {
+        vertices[i] = actual;
+        valor[i] = numeric_limits<double>::infinity(); // valor inicial infinito
+        vieneDe[i] = nullptr;         // no viene de nadie
+        anterior[i] = -1;        // no tiene anterior
+        actual = actual->getSig();
+        i++;
+    }
+
+    valor[posicionDe(vertices, n, verticeOrigen)] = 0; // el origen tiene valor 0
+
+    while (true) {
+        int menor = -1;
+        for (int k = 0; k < n; k++) { // k para no tapar a la i de afuera
+            if (!vertices[k]->isVisitado() && valor[k] != numeric_limits<double>::infinity()
+                && (menor == -1 || valor[k] < valor[menor])) { // se queda con el mas pequeno
+                menor = k;
+            }
+        }
+
+        if (menor == -1) {
+            break; // todos los vertices han sido visitados o no hay mas alcanzables
+        }
+
+        Vertice* m = vertices[menor];
+        m->setVisitado(true);
+        if (m == verticeDestino) {
+            break; // el destino ya quedo fijado
+        }
+
+        Arco* arcoActual = m->getPrimerArco();
+        while (arcoActual != nullptr) {
+
+            Vertice* vertice = arcoActual->getDestino();
+            int j = posicionDe(vertices, n, vertice);
+
+            if (!vertice->isVisitado()) {
+                double suma = valor[menor] + arcoActual->getPerdida(); // perdida acumulada
+
+                if (suma < valor[j]){
+                    valor[j] = suma;
+                    vieneDe[j] = arcoActual;
+                    anterior[j] = menor;
+                }
+            }
+            arcoActual = arcoActual->getSig();
+        }
+    }
+
+    delete[] vertices;
+    delete[] valor;
+    delete[] vieneDe;
+    delete[] anterior;
+}
+
 void Grafo::consultarRutaMayorTokens(string origen, string destino, Cliente* cliente, bool horaNoPico) {}
 void Grafo::imprimirRutaFrecuenteYUnica() {}
 
