@@ -2,6 +2,7 @@
 #include <iostream>
 #include <queue>
 #include <limits>
+#include <cmath>
 using namespace std;
 
 Grafo::Grafo() {
@@ -410,11 +411,26 @@ int Grafo::contarVertices() {
     return contador;
 }
 
-void Grafo::buscarRutas(Vertice* inicio, Vertice* actual, Vertice* destino, bool altaTension, bool subterraneo, bool redLocal, Arco** ruta, int largo, int& cantidad) {
+void Grafo::buscarRutas(Vertice* inicio, Vertice* actual, Vertice* destino, bool altaTension, bool subterraneo, bool redLocal, Arco** ruta, int largo, int& cantidad, bool puntuar, Arco** mejorRuta, int& mejorLargo, double& mejorPuntaje) {
     //  se llego al destino
     if (actual == destino) {
         cantidad++;
-        imprimirRuta(inicio, ruta, largo, cantidad);
+        if (!puntuar) {
+            imprimirRuta(inicio, ruta, largo, cantidad); // modo todas las rutas
+        } 
+        else {
+            double puntaje = 0; // modo Eco-Tokens
+            for (int k = 0; k < largo; k++) {
+                puntaje += puntajeArco(ruta[k]);
+            }
+            if (mejorLargo == 0 || puntaje > mejorPuntaje) { // es la primera o supera a la mejor
+                for (int k = 0; k < largo; k++) {
+                    mejorRuta[k] = ruta[k]; // se copia porque ruta se va a sobrescribir
+                }
+                mejorLargo = largo;
+                mejorPuntaje = puntaje;
+            }
+        }
         return; // el destino no se marca para que otras rutas lleguen
     }
 
@@ -427,7 +443,8 @@ void Grafo::buscarRutas(Vertice* inicio, Vertice* actual, Vertice* destino, bool
         Vertice* siguiente = arcoActual->getDestino();
         if (medioPermitido(arcoActual->getMedio(), altaTension, subterraneo, redLocal) && !siguiente->isVisitado()) {
             ruta[largo] = arcoActual; // se agrega el arco al camino
-            buscarRutas(inicio, siguiente, destino, altaTension, subterraneo, redLocal, ruta, largo + 1, cantidad);
+            buscarRutas(inicio, siguiente, destino, altaTension, subterraneo, redLocal,
+                        ruta, largo + 1, cantidad, puntuar, mejorRuta, mejorLargo, mejorPuntaje);
         }
         arcoActual = arcoActual->getSig();
     }
@@ -475,8 +492,10 @@ void Grafo::imprimirTodasLasRutas(string origen, string destino, bool altaTensio
     int cantidad = 0;
 
     cout << "Rutas de " << origen << " a " << destino << ":" << endl;
+    int mejorLargo = 0;      // no se usan en este modo
+    double mejorPuntaje = 0;
     buscarRutas(verticeOrigen, verticeOrigen, verticeDestino, altaTension, subterraneo, redLocal,
-                ruta, 0, cantidad);
+                ruta, 0, cantidad, false, nullptr, mejorLargo, mejorPuntaje);
     delete[] ruta;
 
     if (cantidad == 0) {
@@ -614,7 +633,121 @@ void Grafo::imprimirRutaMenorPerdida(string origen, string destino) {
     delete[] anterior;
 }
 
-void Grafo::consultarRutaMayorTokens(string origen, string destino, Cliente* cliente, bool horaNoPico) {}
+double Grafo::puntajeArco(Arco* arco) {
+    double base = 5; // red_local
+    if (arco->getMedio() == "alta_tension") {
+        base = 10;
+    } else if (arco->getMedio() == "subterraneo") {
+        base = 8;
+    }
+    return base - arco->getPerdida() - 0.05 * arco->getDistancia();
+}
+
+void Grafo::consultarRutaMayorTokens(string origen, string destino, Cliente* cliente, bool horaNoPico) {
+    // Validar
+    Vertice* verticeOrigen = buscarVertice(origen);
+    Vertice* verticeDestino = buscarVertice(destino);
+    if (verticeOrigen == nullptr) {
+        cout << "Error: El vertice '" << origen << "' no existe." << endl;
+        return;
+    }
+    if (verticeDestino == nullptr) {
+        cout << "Error: El vertice '" << destino << "' no existe." << endl;
+        return;
+    }
+    if (verticeOrigen == verticeDestino) {
+        cout << "Error: El origen y el destino son el mismo vertice." << endl;
+        return;
+    }
+
+    // Buscar la ruta de mayor puntaje con los tres medios
+    reiniciarVisitados();
+    int n = contarVertices();
+    Arco** ruta = new Arco*[n];
+    Arco** mejorRuta = new Arco*[n];
+    int cantidad = 0;
+    int mejorLargo = 0;
+    double mejorPuntaje = 0;
+    buscarRutas(verticeOrigen, verticeOrigen, verticeDestino, true, true, true, ruta, 0, cantidad, true, mejorRuta, mejorLargo, mejorPuntaje);
+
+    // Encontro alguna ruta
+    if (cantidad == 0) {
+        cout << "No hay ruta de " << origen << " a " << destino << endl;
+        delete[] ruta;
+        delete[] mejorRuta;
+        return;
+    }
+
+    // Calcular tokens
+    double total = mejorPuntaje;
+    if (horaNoPico && total > 0) {
+        total = total * 1.5; // bono de hora no pico
+    }
+    int tokens = (int) round(total);
+
+    // Mostrar la mejor ruta
+    cout << "Ruta de mayor Eco-Tokens de " << origen << " a " << destino << ":" << endl;
+    for (int k = 0; k < mejorLargo; k++) {
+        string nombreOrigen;
+        if (k == 0) {
+            nombreOrigen = verticeOrigen->getNombre(); // el primer arco sale del origen
+        } else {
+            nombreOrigen = mejorRuta[k - 1]->getDestino()->getNombre(); // sale de donde llego el anterior
+        }
+        cout << "  " << nombreOrigen << " -> " << mejorRuta[k]->getDestino()->getNombre()
+             << " [" << mejorRuta[k]->getMedio() << ", " << puntajeArco(mejorRuta[k]) << " puntos]" << endl;
+    }
+    cout << "  Puntaje total: " << mejorPuntaje;
+    if (horaNoPico && mejorPuntaje > 0) {
+        cout << " x 1.5 por hora no pico = " << total;
+    }
+    cout << endl;
+
+    // Tokens mayores que 0
+    if (tokens <= 0) {
+        cout << "La ruta no otorga tokens." << endl;
+        delete[] ruta;
+        delete[] mejorRuta;
+        return;
+    }
+    cout << "  Tokens: " << tokens << endl;
+
+    // El cliente acepta
+    cout << "Acepta la ruta " << cliente->getNombre() << "? 1 = si y 0 = no: ";
+    int respuesta;
+    while (!(cin >> respuesta) || (respuesta != 0 && respuesta != 1)) { // lectura segura
+        cout << "Valor invalido. Escriba 1 o 0: ";
+        cin.clear();
+        cin.ignore(1000, '\n');
+    }
+    cin.ignore(1000, '\n'); // limpia el Enter
+
+    if (respuesta == 0) {
+        cout << "Sin cambios." << endl;
+        delete[] ruta;
+        delete[] mejorRuta;
+        return;
+    }
+
+    // Actualizar cliente y usos
+    cliente->setTokens(cliente->getTokens() + tokens);
+    if (verticeOrigen->getTipo() != "generador" && !cliente->tieneSubestacion(verticeOrigen->getNombre())) {
+        cliente->agregarSubestacion(verticeOrigen->getNombre());
+    }
+    for (int k = 0; k < mejorLargo; k++) {
+        mejorRuta[k]->setUsos(mejorRuta[k]->getUsos() + 1); // cada linea suma un uso
+        Vertice* llegada = mejorRuta[k]->getDestino();
+        if (llegada->getTipo() != "generador" && !cliente->tieneSubestacion(llegada->getNombre())) {
+            cliente->agregarSubestacion(llegada->getNombre()); // sin repetir
+        }
+    }
+    cout << "Ruta aceptada. " << cliente->getNombre() << " ahora tiene " << cliente->getTokens() << " tokens." << endl;
+
+    // Liberar
+    delete[] ruta;
+    delete[] mejorRuta;
+}
+
 void Grafo::imprimirRutaFrecuenteYUnica() {}
 
 void Grafo::imprimirNodosInactivos(ListaClientes& clientes) {

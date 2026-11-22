@@ -26,8 +26,11 @@ private:
     bool medioPermitido(string medio, bool altaTension, bool subterraneo, bool redLocal);
     // Cuantos vertices hay para saber el tamano del arreglo de la ruta
     int contarVertices();
-    // Backtracking: avanza nodo por nodo y al llegar al destino imprime la ruta
-    void buscarRutas(Vertice* inicio, Vertice* actual, Vertice* destino, bool altaTension, bool subterraneo, bool redLocal, Arco** ruta, int largo, int& cantidad);
+    // Backtracking: avanza nodo por nodo y al llegar al destino
+    // imprime la ruta o si puntuar es true guarda la de mayor puntaje
+    void buscarRutas(Vertice* inicio, Vertice* actual, Vertice* destino, bool altaTension, bool subterraneo, bool redLocal, Arco** ruta, int largo, int& cantidad, bool puntuar, Arco** mejorRuta, int& mejorLargo, double& mejorPuntaje);
+    // Puntaje Eco-Tokens de una linea
+    double puntajeArco(Arco* arco);
     // Imprime una ruta ya encontrada
     void imprimirRuta(Vertice* inicio, Arco** ruta, int largo, int numero);
     // ayuda en el algoritmo de Dijkstra para encontrar la posicion de un vertice en el arreglo
@@ -59,8 +62,7 @@ public:
     void reiniciarVisitados();
     void imprimirBFS(string inicio);
     void imprimirDFS(string inicio);
-    void imprimirTodasLasRutas(string origen, string destino,
-                               bool altaTension, bool subterraneo, bool redLocal);
+    void imprimirTodasLasRutas(string origen, string destino, bool altaTension, bool subterraneo, bool redLocal);
     void imprimirRutaMenorPerdida(string origen, string destino);
 
     // Ruta de mayor Eco-Tokens
