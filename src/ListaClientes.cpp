@@ -192,4 +192,65 @@ void ListaClientes::imprimirCliente(Cliente* cliente) {
     imprimirTextos(cliente->getPrimerBeneficio());
 }
 
-bool ListaClientes::canjearBeneficio(string nombreCliente, ListaBeneficios& catalogo) {return false;}
+bool ListaClientes::canjearBeneficio(string nombreCliente, ListaBeneficios& catalogo) {
+    Cliente* cliente = buscarCliente(nombreCliente);
+    if (cliente == nullptr) {
+        cout << "No existe el cliente con nombre: " << nombreCliente << endl;
+        return false;
+    }
+
+    // Mostrar los beneficios disponibles para el cliente
+    cout << "Beneficios disponibles para " << cliente->getNombre() << " (" << cliente->getTokens() << " tokens):" << endl;
+    int cantidad = 0;
+    Beneficio* beneficio = catalogo.getPrimero();
+    while (beneficio != nullptr) {
+        if (beneficio->getCosto() <= cliente->getTokens() && !cliente->tieneBeneficio(beneficio->getNombre())) { // le alcanza y no lo tiene
+            cantidad++;
+            cout << cantidad << ". " << beneficio->getNombre() << " | costo: " << beneficio->getCosto() << " tokens" << endl;
+        }
+        beneficio = beneficio->getSig();
+    }
+
+    if (cantidad == 0) {
+        cout << "No hay beneficios disponibles para " << cliente->getNombre() << endl;
+        return false;
+    }
+
+    // Elegir
+    cout << "0. Cancelar" << endl;
+    cout << "Seleccione el beneficio a canjear: ";
+    int opcion;
+    while (!(cin >> opcion) || opcion < 0 || opcion > cantidad) {
+        cout << "Valor invalido. Escriba un numero entre 0 y " << cantidad << ": ";
+        cin.clear();
+        cin.ignore(1000, '\n');
+    }
+    cin.ignore(1000, '\n'); // limpia el Enter
+
+    if (opcion == 0) {
+        cout << "Canje cancelado." << endl;
+        return false;
+    }
+
+    // Llegar al elegido
+    int contador = 0;
+    beneficio = catalogo.getPrimero();
+    while (beneficio != nullptr) {
+        if (beneficio->getCosto() <= cliente->getTokens() && !cliente->tieneBeneficio(beneficio->getNombre())) { // mismo filtro
+            contador++;
+            if (contador == opcion) {
+                break; // beneficio queda apuntando al elegido
+            }
+        }
+        beneficio = beneficio->getSig();
+    }
+
+    // Aplicar
+    if (!cliente->agregarBeneficio(beneficio->getNombre())) {
+        return false;
+    }
+    int antes = cliente->getTokens();
+    cliente->setTokens(antes - beneficio->getCosto());
+    cout << "Canjeado: " << beneficio->getNombre() << ". Tokens: " << antes << " -> " << cliente->getTokens() << endl;
+    return true;
+}
