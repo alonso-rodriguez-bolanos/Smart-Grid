@@ -21,6 +21,11 @@ private:
     string elegirTipo();
     string elegirMedio();
 
+    string elegirVertice(string mensaje);
+    string elegirCliente(string mensaje);
+    string elegirBeneficio(string mensaje);
+    bool elegirArco(string& origen, string& destino, string& medio);
+
     void menuCRUD();
     void menuReportes();
     void menuConsultas();

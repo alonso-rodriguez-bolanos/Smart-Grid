@@ -8,6 +8,7 @@ Menu::Menu(Grafo& red, ListaClientes& clientes, ListaBeneficios& beneficios, Arc
 // ======================================================================
 // Lectura desde el teclado
 // ======================================================================
+
 int Menu::leerEntero(int minimo, int maximo) {
     int valor;
     while (true) {
@@ -77,9 +78,127 @@ string Menu::elegirMedio() {
     return "red_local";
 }
 
+string Menu::elegirVertice(string mensaje) {
+    cout << mensaje << endl;
+
+    int n = 0;
+    Vertice* v = red.getPrimerVertice();
+    while (v != nullptr) {
+        n++;
+        cout << n << ". " << v->getNombre() << " (" << v->getTipo() << ", " << v->getRegion() << ")" << endl;
+        v = v->getSig();
+    }
+    if (n == 0) {
+        cout << "No hay vertices en la red." << endl;
+        return "";
+    }
+    cout << "0. Cancelar" << endl;
+    int opcion = leerEntero(0, n);
+    if (opcion == 0) {
+        return "";
+    }
+
+    v = red.getPrimerVertice();
+    for (int k = 1; k < opcion; k++) {
+        v = v->getSig();
+    }
+    return v->getNombre();
+}
+
+string Menu::elegirCliente(string mensaje) {
+    cout << mensaje << endl;
+
+    int n = 0;
+    Cliente* c = clientes.getPrimero();
+    while (c != nullptr) {
+        n++;
+        cout << n << ". " << c->getNombre() << " (" << c->getTokens() << " tokens)" << endl;
+        c = c->getSig();
+    }
+    if (n == 0) {
+        cout << "No hay clientes registrados." << endl;
+        return "";
+    }
+    cout << "0. Cancelar" << endl;
+    int opcion = leerEntero(0, n);
+    if (opcion == 0) {
+        return "";
+    }
+
+    c = clientes.getPrimero();
+    for (int k = 1; k < opcion; k++) {
+        c = c->getSig();
+    }
+    return c->getNombre();
+}
+
+string Menu::elegirBeneficio(string mensaje) {
+    cout << mensaje << endl;
+
+    int n = 0;
+    Beneficio* b = beneficios.getPrimero();
+    while (b != nullptr) {
+        n++;
+        cout << n << ". " << b->getNombre() << " | costo: " << b->getCosto() << " tokens" << endl;
+        b = b->getSig();
+    }
+    if (n == 0) {
+        cout << "No hay beneficios en el catalogo." << endl;
+        return "";
+    }
+    cout << "0. Cancelar" << endl;
+    int opcion = leerEntero(0, n);
+    if (opcion == 0) {
+        return "";
+    }
+
+    b = beneficios.getPrimero();
+    for (int k = 1; k < opcion; k++) {
+        b = b->getSig();
+    }
+    return b->getNombre();
+}
+
+bool Menu::elegirArco(string& origen, string& destino, string& medio) {
+    origen = elegirVertice("Vertice de origen de la linea:");
+    if (origen == "") {
+        return false;
+    }
+    Vertice* v = red.buscarVertice(origen);
+
+
+    cout << "Lineas que salen de " << origen << ":" << endl;
+    int n = 0;
+    Arco* a = v->getPrimerArco();
+    while (a != nullptr) {
+        n++;
+        cout << n << ". " << origen << " -> " << a->getDestino()->getNombre()
+             << " [" << a->getMedio() << ", " << a->getDistancia() << " km]" << endl;
+        a = a->getSig();
+    }
+    if (n == 0) {
+        cout << origen << " no tiene lineas de salida." << endl;
+        return false;
+    }
+    cout << "0. Cancelar" << endl;
+    int opcion = leerEntero(0, n);
+    if (opcion == 0) {
+        return false;
+    }
+
+    a = v->getPrimerArco();
+    for (int k = 1; k < opcion; k++) {
+        a = a->getSig();
+    }
+    destino = a->getDestino()->getNombre();
+    medio = a->getMedio();
+    return true;
+}
+
 // ======================================================================
 // Submenus
 // ======================================================================
+
 void Menu::menuCRUD() {
     int opcion = -1;
     while (opcion != 0) {
@@ -115,7 +234,11 @@ void Menu::menuCRUD() {
                 break;
             }
             case 2: {
-                string actual = leerTexto("Nombre actual del vertice: ");
+                string actual = elegirVertice("Vertice a modificar:");
+                if (actual == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 string nuevo = leerTexto("Nombre nuevo: ");
                 string tipo = elegirTipo();
                 string region = leerTexto("Region nueva: ");
@@ -128,7 +251,11 @@ void Menu::menuCRUD() {
                 break;
             }
             case 3: {
-                string nombre = leerTexto("Nombre del vertice a eliminar: ");
+                string nombre = elegirVertice("Vertice a eliminar:");
+                if (nombre == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 if (red.eliminarVertice(nombre)) {
                     clientes.quitarSubestacionDeTodos(nombre); // cascada a los clientes
                     cout << "Vertice eliminado." << endl;
@@ -136,8 +263,16 @@ void Menu::menuCRUD() {
                 break;
             }
             case 4: {
-                string origen = leerTexto("Vertice de origen: ");
-                string destino = leerTexto("Vertice de destino: ");
+                string origen = elegirVertice("Vertice de origen:");
+                if (origen == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
+                string destino = elegirVertice("Vertice de destino:");
+                if (destino == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 string medio = elegirMedio();
                 cout << "Distancia en km: ";
                 double distancia = leerDecimal();
@@ -151,9 +286,11 @@ void Menu::menuCRUD() {
                 break;
             }
             case 5: {
-                string origen = leerTexto("Vertice de origen: ");
-                string destino = leerTexto("Vertice de destino: ");
-                string medio = elegirMedio(); // el medio identifica cual linea es
+                string origen, destino, medio;
+                if (!elegirArco(origen, destino, medio)) { // la linea se elige de la lista
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 cout << "Distancia nueva en km: ";
                 double distancia = leerDecimal();
                 cout << "Capacidad maxima nueva: ";
@@ -166,9 +303,11 @@ void Menu::menuCRUD() {
                 break;
             }
             case 6: {
-                string origen = leerTexto("Vertice de origen: ");
-                string destino = leerTexto("Vertice de destino: ");
-                string medio = elegirMedio();
+                string origen, destino, medio;
+                if (!elegirArco(origen, destino, medio)) {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 if (red.eliminarArco(origen, destino, medio)) {
                     cout << "Linea eliminada." << endl;
                 }
@@ -184,17 +323,20 @@ void Menu::menuCRUD() {
                 break;
             }
             case 8: {
-                string nombre = leerTexto("Nombre del cliente: ");
-                Cliente* cliente = clientes.buscarCliente(nombre);
-                if (cliente == nullptr) {
-                    cout << "No existe el cliente " << nombre << endl;
-                } else {
-                    clientes.imprimirCliente(cliente);
+                string nombre = elegirCliente("Cliente a buscar:");
+                if (nombre == "") {
+                    cout << "Cancelado." << endl;
+                    break;
                 }
+                clientes.imprimirCliente(clientes.buscarCliente(nombre));
                 break;
             }
             case 9: {
-                string nombre = leerTexto("Nombre del cliente a eliminar: ");
+                string nombre = elegirCliente("Cliente a eliminar:");
+                if (nombre == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 if (clientes.eliminarCliente(nombre)) {
                     cout << "Cliente eliminado." << endl;
                 } else {
@@ -203,7 +345,11 @@ void Menu::menuCRUD() {
                 break;
             }
             case 10: {
-                string nombre = leerTexto("Nombre del cliente: ");
+                string nombre = elegirCliente("Cliente al que se le asignan tokens:");
+                if (nombre == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 cout << "Cantidad de tokens a sumar o restar con signo menos" << endl;
                 int cantidad = leerEntero(-1000000, 1000000);
                 if (clientes.asignarTokens(nombre, cantidad)) {
@@ -221,7 +367,11 @@ void Menu::menuCRUD() {
                 break;
             }
             case 12: {
-                string actual = leerTexto("Nombre actual del beneficio: ");
+                string actual = elegirBeneficio("Beneficio a modificar:");
+                if (actual == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 string nuevo = leerTexto("Nombre nuevo: ");
                 cout << "Costo nuevo en tokens" << endl;
                 int costo = leerEntero(1, 1000000);
@@ -231,7 +381,11 @@ void Menu::menuCRUD() {
                 break;
             }
             case 13: {
-                string nombre = leerTexto("Nombre del beneficio a eliminar: ");
+                string nombre = elegirBeneficio("Beneficio a eliminar:");
+                if (nombre == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 if (beneficios.eliminarBeneficio(nombre)) {
                     cout << "Beneficio eliminado." << endl;
                 }
@@ -258,12 +412,20 @@ void Menu::menuReportes() {
 
         switch (opcion) {
             case 1: {
-                string inicio = leerTexto("Vertice de inicio: ");
+                string inicio = elegirVertice("Vertice de inicio:");
+                if (inicio == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 red.imprimirBFS(inicio);
                 break;
             }
             case 2: {
-                string inicio = leerTexto("Vertice de inicio: ");
+                string inicio = elegirVertice("Vertice de inicio:");
+                if (inicio == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 red.imprimirDFS(inicio);
                 break;
             }
@@ -297,8 +459,16 @@ void Menu::menuConsultas() {
 
         switch (opcion) {
             case 1: {
-                string origen = leerTexto("Vertice de origen: ");
-                string destino = leerTexto("Vertice de destino: ");
+                string origen = elegirVertice("Vertice de origen:");
+                if (origen == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
+                string destino = elegirVertice("Vertice de destino:");
+                if (destino == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 cout << "Usar alta tension? 1 = si y 0 = no" << endl;
                 int alta = leerEntero(0, 1);
                 cout << "Usar subterraneo? 1 = si y 0 = no" << endl;
@@ -314,27 +484,46 @@ void Menu::menuConsultas() {
                 break;
             }
             case 2: {
-                string origen = leerTexto("Vertice de origen: ");
-                string destino = leerTexto("Vertice de destino: ");
+                string origen = elegirVertice("Vertice de origen:");
+                if (origen == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
+                string destino = elegirVertice("Vertice de destino:");
+                if (destino == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 red.imprimirRutaMenorPerdida(origen, destino);
                 break;
             }
             case 3: {
-                string nombre = leerTexto("Nombre del cliente: ");
-                Cliente* cliente = clientes.buscarCliente(nombre);
-                if (cliente == nullptr) {
-                    cout << "No existe el cliente " << nombre << endl;
-                } else {
-                    string origen = leerTexto("Vertice de origen: ");
-                    string destino = leerTexto("Vertice de destino: ");
-                    cout << "Es hora no pico? 1 = si y 0 = no" << endl;
-                    int horaNoPico = leerEntero(0, 1);
-                    red.consultarRutaMayorTokens(origen, destino, cliente, horaNoPico == 1);
+                string nombre = elegirCliente("Cliente:");
+                if (nombre == "") {
+                    cout << "Cancelado." << endl;
+                    break;
                 }
+                string origen = elegirVertice("Vertice de origen:");
+                if (origen == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
+                string destino = elegirVertice("Vertice de destino:");
+                if (destino == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
+                cout << "Es hora no pico? 1 = si y 0 = no" << endl;
+                int horaNoPico = leerEntero(0, 1);
+                red.consultarRutaMayorTokens(origen, destino, clientes.buscarCliente(nombre), horaNoPico == 1);
                 break;
             }
             case 4: {
-                string nombre = leerTexto("Nombre del cliente: ");
+                string nombre = elegirCliente("Cliente que canjea:");
+                if (nombre == "") {
+                    cout << "Cancelado." << endl;
+                    break;
+                }
                 clientes.canjearBeneficio(nombre, beneficios);
                 break;
             }
@@ -351,6 +540,7 @@ void Menu::menuConsultas() {
 // ======================================================================
 // Menu principal
 // ======================================================================
+
 void Menu::ejecutar() {
     int opcion = -1;
     while (opcion != 0) {
